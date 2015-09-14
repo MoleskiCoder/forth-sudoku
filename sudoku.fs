@@ -59,6 +59,21 @@ create possible-moves
   9 9 * cells allot
 
 
+( bitset operations )
+
+: mask@ ( n -- mask )
+   1 swap lshift ;
+
+: bit@ ( n bit# -- masked )
+   mask@ and ;
+
+: bit-set ( n bit# -- masked )
+   mask@ or ;
+
+: bit-clear ( n bit# -- masked )
+   mask@ invert and ;
+
+
 ( Move translations )
 
 : move-xy ( n -- x y )
