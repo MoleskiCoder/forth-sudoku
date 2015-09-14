@@ -1,6 +1,8 @@
 ( SUDOKU SOLVER )
 
-(
+( 
+An aide memoire to the layout of the puzzle
+
    0          1          2
 
 0  1  2  - 3  4  5  - 6  7  8
@@ -31,7 +33,8 @@
 3 constant box-size
 9 constant board-size
 
-create sudoku-data
+
+create board
 
 8 , 7 , 0 , 0 , 0 , 0 , 0 , 4 , 0 ,
 
@@ -51,6 +54,13 @@ create sudoku-data
 
 0 , 0 , 0 , 0 , 0 , 0 , 0 , 5 , 0 ,
 
+
+create possible-moves
+  9 9 * cells allot
+
+
+( Move translations )
+
 : move-xy ( n -- x y )
    board-size /mod ;
 
@@ -66,17 +76,35 @@ create sudoku-data
 : move-box-xy ( n -- box-x box-y )
    move-xy box-size / swap box-size / swap ;
 
-: sudoku-element ( n -- addr )
-   cells sudoku-data + ;
 
-: sudoku-element@ ( n -- value )
-   sudoku-element @ ;
+( Possible handlers.  Possible set is an array of bitsets )
 
-: sudoku-data! ( value n -- )
-   sudoku-element @ ;
+: possible ( n -- addr )
+   cells possible-moves + ;
 
-: .sudoku-element ( n )
-   sudoku-element@ dup
+: possible@ ( n -- value )
+   possible @ ;
+
+: possible! ( value n -- )
+   possible ! ;
+
+
+( Current boards, start -> solved. 1 - 9, zero is an entry in the possible set )
+
+: board-element ( n -- addr )
+   cells board + ;
+
+: board-element@ ( n -- value )
+   board-element @ ;
+
+: board-element! ( value n -- )
+   board-element ! ;
+
+
+( Board display )
+
+: .board-element ( n )
+   board-element@ dup
    ."  "
    0= if drop ." - " else .  then
    ."  " ;
@@ -87,7 +115,7 @@ create sudoku-data
 : .box-break-horizontal ( -- )
    ." ------------+------------+-----------" ;
 
-: .sudoku-board
+: .board
    board-size board-size * 0 do
      i move-x 0= if
        i move-y box-size mod 0= if
@@ -100,10 +128,24 @@ create sudoku-data
          .box-break-vertical
        then
      then
-     i .sudoku-element
+     i .board-element
    loop
    cr cr .box-break-horizontal cr ;
 
-.sudoku-board
+
+( Solver )
+
+: initialise-possible
+   board-size board-size * 0 do
+     i board-element@ 0= if -1 else 0 then
+     i possible!
+   loop ;
+
+
+( Go! )
+
+.board
+
+initialise-possible
 
 bye
