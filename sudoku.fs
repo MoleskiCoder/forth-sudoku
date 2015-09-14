@@ -33,23 +33,23 @@
 
 create sudoku-data
 
-8 c, 7 c, 0 c, 0 c, 0 c, 0 c, 0 c, 4 c, 0 c,
+8 , 7 , 0 , 0 , 0 , 0 , 0 , 4 , 0 ,
 
-0 c, 0 c, 0 c, 0 c, 0 c, 1 c, 0 c, 0 c, 0 c,
+0 , 0 , 0 , 0 , 0 , 1 , 0 , 0 , 0 ,
 
-0 c, 0 c, 1 c, 3 c, 0 c, 5 c, 9 c, 0 c, 6 c,
+0 , 0 , 1 , 3 , 0 , 5 , 9 , 0 , 6 ,
 
-9 c, 0 c, 4 c, 0 c, 1 c, 0 c, 0 c, 6 c, 8 c,
+9 , 0 , 4 , 0 , 1 , 0 , 0 , 6 , 8 ,
 
-3 c, 0 c, 6 c, 9 c, 0 c, 8 c, 0 c, 0 c, 0 c,
+3 , 0 , 6 , 9 , 0 , 8 , 0 , 0 , 0 ,
 
-0 c, 0 c, 0 c, 0 c, 0 c, 0 c, 4 c, 0 c, 1 c,
+0 , 0 , 0 , 0 , 0 , 0 , 4 , 0 , 1 ,
 
-0 c, 0 c, 5 c, 0 c, 3 c, 7 c, 0 c, 0 c, 0 c,
+0 , 0 , 5 , 0 , 3 , 7 , 0 , 0 , 0 ,
 
-0 c, 4 c, 8 c, 6 c, 0 c, 9 c, 2 c, 3 c, 0 c,
+0 , 4 , 8 , 6 , 0 , 9 , 2 , 3 , 0 ,
 
-0 c, 0 c, 0 c, 0 c, 0 c, 0 c, 0 c, 5 c, 0 c,
+0 , 0 , 0 , 0 , 0 , 0 , 0 , 5 , 0 ,
 
 : move-xy ( n -- x y )
    board-size /mod ;
@@ -67,13 +67,13 @@ create sudoku-data
    move-xy box-size / swap box-size / swap ;
 
 : sudoku-element ( n -- addr )
-   sudoku-data + ;
+   cells sudoku-data + ;
 
 : sudoku-element@ ( n -- value )
-   sudoku-element c@ ;
+   sudoku-element @ ;
 
 : sudoku-data! ( value n -- )
-   sudoku-element c@ ;
+   sudoku-element @ ;
 
 : .sudoku-element ( n )
    sudoku-element@ dup
