@@ -28,6 +28,9 @@
 72 73 74   75 76 77   78 79 80 - 8
 )
 
+3 constant box-size
+9 constant board-size
+
 create sudoku-data
 
 8 c, 7 c, 0 c, 0 c, 0 c, 0 c, 0 c, 4 c, 0 c,
@@ -49,7 +52,7 @@ create sudoku-data
 0 c, 0 c, 0 c, 0 c, 0 c, 0 c, 0 c, 5 c, 0 c,
 
 : move-xy ( n -- x y )
-   9 /mod ;
+   board-size /mod ;
 
 : move-x ( n -- x )
    move-xy drop ;
@@ -58,10 +61,10 @@ create sudoku-data
    move-xy nip ;
 
 : xy-move ( x y -- n )
-   9 * + ;
+   board-size * + ;
 
 : move-box-xy ( n -- box-x box-y )
-   move-xy 3 / swap 3 / swap ;
+   move-xy box-size / swap box-size / swap ;
 
 : sudoku-element ( n -- addr )
    sudoku-data + ;
@@ -85,15 +88,15 @@ create sudoku-data
    ." ------------+------------+-----------" ;
 
 : .sudoku-board
-   9 9 * 0 do
+   board-size board-size * 0 do
      i move-x 0= if
-       i move-y 3 mod 0= if
+       i move-y box-size mod 0= if
          cr cr
          .box-break-horizontal
        then
        cr cr
      else
-       i move-x 3 mod 0= if
+       i move-x box-size mod 0= if
          .box-break-vertical
        then
      then
