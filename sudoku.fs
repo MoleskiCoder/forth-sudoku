@@ -163,25 +163,21 @@ create possible-moves
 
 : eliminate-row ( value y -- )
    9 0 do
-     dup ( value y y )
-     i ( value y y i )
-     swap ( value y i y )
-     xy-move ( value y n )
+     i over xy-move ( value y n )
      rot ( y n value )
      dup ( y n value value )
      rot ( y value value n )
      eliminate ( y value )
-     swap dup
+     swap
    loop
-   drop drop ;
+   2drop ;
 
 : eliminate-row-possibilities ( y -- )
    9 0 do
-     dup i swap ( y i y )
-     xy-move ( y n )
+     i over xy-move ( y n )
      board-element@ ( y current )
      over ( y current y )
-     ( y current y ) eliminate-row
+     eliminate-row
    loop
    drop ;
 
