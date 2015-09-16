@@ -73,6 +73,19 @@ create possible-moves
 : bit-clear ( n bit# -- masked )
    mask@ invert and ;
 
+: bit-count ( n -- count )
+   0 swap
+   9 0 do
+     dup i mask@
+     and 0= invert if
+       swap 1+ swap
+     then
+   loop
+   drop ;
+
+: bit-singular ( masked - boolean )
+   bit-count 1 = ;
+
 
 ( Move translations )
 
@@ -161,25 +174,58 @@ create possible-moves
      i possible!
    loop ;
 
+: eliminate-column ( value x -- )
+   9 0 do
+     over over
+     i xy-move
+     eliminate
+   loop
+   2drop ;
+
+: eliminate-column-possibilities ( x -- )
+   9 0 do
+     dup i xy-move board-element@
+     dup 0= if
+       drop
+     else
+       over eliminate-column
+     then
+   loop
+   drop ;
+
 : eliminate-row ( value y -- )
    9 0 do
-     i over xy-move ( value y n )
-     rot ( y n value )
-     dup ( y n value value )
-     rot ( y value value n )
-     eliminate ( y value )
+     i over xy-move
+     rot dup rot
+     eliminate
      swap
    loop
    2drop ;
 
 : eliminate-row-possibilities ( y -- )
    9 0 do
-     i over xy-move ( y n )
-     board-element@ ( y current )
-     over ( y current y )
-     eliminate-row
+     i over xy-move board-element@
+     dup 0= if
+       drop
+     else
+       over eliminate-row
+     then
    loop
    drop ;
+
+: eliminate-all-row-possibilities ( -- )
+   9 0 do
+     i eliminate-row-possibilities
+   loop ;
+
+: eliminate-all-column-possibilities ( -- )
+   9 0 do
+     i eliminate-column-possibilities
+   loop ;
+
+: eliminate-all-possibilities ( -- )
+   eliminate-all-row-possibilities
+   eliminate-all-column-possibilities ;
 
 
 ( Go! )
@@ -187,5 +233,6 @@ create possible-moves
 .board
 
 initialise-possible
+eliminate-all-possibilities
 
 \ bye
