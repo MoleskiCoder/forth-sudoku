@@ -56,7 +56,7 @@ create board
 
 
 create possible-moves
-  9 9 * cells allot
+  board-size board-size * cells allot
 
 
 ( bitset operations )
@@ -67,15 +67,15 @@ create possible-moves
 : bit@ ( n bit# -- masked )
    mask@ and ;
 
-: bit-set ( n bit# -- masked )
+: bit-set ( n bit# -- n )
    mask@ or ;
 
-: bit-clear ( n bit# -- masked )
+: bit-clear ( n bit# -- n )
    mask@ invert and ;
 
 : bit-count ( n -- count )
    0 swap
-   9 0 do
+   board-size 0 do
      dup i mask@
      and 0= invert if
        swap 1+ swap
@@ -83,7 +83,7 @@ create possible-moves
    loop
    drop ;
 
-: bit-singular ( masked - boolean )
+: bit-singular ( n - f )
    bit-count 1 = ;
 
 
@@ -136,7 +136,7 @@ create possible-moves
 
 ( Board display )
 
-: .board-element ( n )
+: .board-element ( n -- )
    board-element@ dup
    ."  "
    0= if drop ." - " else .  then
@@ -148,7 +148,7 @@ create possible-moves
 : .box-break-horizontal ( -- )
    ." ------------+------------+-----------" ;
 
-: .board
+: .board ( -- )
    board-size board-size * 0 do
      i move-x 0= if
        i move-y box-size mod 0= if
@@ -168,14 +168,14 @@ create possible-moves
 
 ( Solver )
 
-: initialise-possible
+: initialise-possible ( -- )
    board-size board-size * 0 do
      i board-element@ 0= if -1 else 0 then
      i possible!
    loop ;
 
 : eliminate-column ( value x -- )
-   9 0 do
+   board-size 0 do
      over over
      i xy-move
      eliminate
@@ -183,7 +183,7 @@ create possible-moves
    2drop ;
 
 : eliminate-column-possibilities ( x -- )
-   9 0 do
+   board-size 0 do
      dup i xy-move board-element@
      dup 0= if
        drop
@@ -194,7 +194,7 @@ create possible-moves
    drop ;
 
 : eliminate-row ( value y -- )
-   9 0 do
+   board-size 0 do
      i over xy-move
      rot dup rot
      eliminate
@@ -203,7 +203,7 @@ create possible-moves
    2drop ;
 
 : eliminate-row-possibilities ( y -- )
-   9 0 do
+   board-size 0 do
      i over xy-move board-element@
      dup 0= if
        drop
@@ -214,12 +214,12 @@ create possible-moves
    drop ;
 
 : eliminate-all-row-possibilities ( -- )
-   9 0 do
+   board-size 0 do
      i eliminate-row-possibilities
    loop ;
 
 : eliminate-all-column-possibilities ( -- )
-   9 0 do
+   board-size 0 do
      i eliminate-column-possibilities
    loop ;
 
