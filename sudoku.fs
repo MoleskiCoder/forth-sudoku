@@ -166,6 +166,26 @@ create possible-moves
    cr cr .box-break-horizontal cr ;
 
 
+( Possibles display )
+
+: .possible ( n -- )
+   possible@ dup
+   ."  "
+   0= if
+     drop ." - "
+   else
+     .
+   then
+   ."  " ;
+
+: .possibles ( -- )
+   board-size 0 do
+     board-size 0 do
+       i j xy-move .possible
+     loop
+     cr
+   loop ;
+
 ( Solver )
 
 : initialise-possible ( -- )
@@ -233,6 +253,9 @@ create possible-moves
 .board
 
 initialise-possible
+
+.possibles
+
 eliminate-all-possibilities
 
 \ bye
