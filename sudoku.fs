@@ -137,9 +137,8 @@ create possible-moves
 ( Board display )
 
 : .board-element ( n -- )
-   board-element@ dup
    ."  "
-   0= if drop ." - " else .  then
+   board-element@ dup 0= if drop ." - " else .  then
    ."  " ;
 
 : .box-break-vertical ( -- )
@@ -169,12 +168,16 @@ create possible-moves
 ( Possibles display )
 
 : .possible ( n -- )
-   possible@ dup
    ."  "
-   0= if
+   possible@ dup 0= if
      drop ." - "
    else
-     .
+     board-size 0 do
+       dup i bit@ 0<> if
+         i 1+ .
+       then
+     loop
+     drop
    then
    ."  " ;
 
@@ -254,8 +257,8 @@ create possible-moves
 
 initialise-possible
 
-.possibles
-
 eliminate-all-possibilities
+
+.possibles
 
 \ bye
