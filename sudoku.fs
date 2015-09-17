@@ -307,10 +307,12 @@ create possible-moves
 ( Global eliminator )
 
 : transfer-singular-possibilities ( -- )
+   0
    board-size board-size * 0 do
      i possible@ dup bit-singular if
        first-set-bit 1+ i board-element!
        0 i possible!
+       1+
      else
        drop
      then
@@ -321,6 +323,13 @@ create possible-moves
    eliminate-all-column-possibilities
    eliminate-all-box-possibilities ;
 
+: solve ( -- )
+   begin
+     eliminate-all-possibilities
+     transfer-singular-possibilities
+     dup cr ." Eliminated:" .
+   0= until cr ;
+
 
 ( Go! )
 
@@ -328,13 +337,9 @@ create possible-moves
 
 initialise-possible
 
-eliminate-all-possibilities
-
-.possibles
-
 ." ----------------------------------"
-
-transfer-singular-possibilities
+solve
+." ----------------------------------"
 
 .board
 .possibles
