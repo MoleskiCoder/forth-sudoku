@@ -220,6 +220,14 @@ create possible-moves
 
 ( Solver )
 
+( 
+  Using https://www.sudokuoftheday.com/techniques/
+  as a guide, I now realise that the current code
+  only implements the "easy" techniques.
+
+  Back to the drawing board!
+)
+
 : initialise-possible ( -- )
    board-size board-size * 0 do
      i board-element@ 0= if -1 else 0 then
