@@ -197,6 +197,8 @@ create possible-moves
      i possible!
    loop ;
 
+( Column eliminations )
+
 : eliminate-column ( value x -- )
    board-size 0 do
      over over
@@ -215,6 +217,13 @@ create possible-moves
      then
    loop
    drop ;
+
+: eliminate-all-column-possibilities ( -- )
+   board-size 0 do
+     i eliminate-column-possibilities
+   loop ;
+
+( Row eliminations )
 
 : eliminate-row ( value y -- )
    board-size 0 do
@@ -241,10 +250,7 @@ create possible-moves
      i eliminate-row-possibilities
    loop ;
 
-: eliminate-all-column-possibilities ( -- )
-   board-size 0 do
-     i eliminate-column-possibilities
-   loop ;
+( Global eliminator )
 
 : eliminate-all-possibilities ( -- )
    eliminate-all-row-possibilities
