@@ -270,13 +270,37 @@ create possible-moves
 
 ( Box eliminations )
 
+: eliminate-box ( value box -- )
+   board-size 0 do
+     over over ( value box value box )
+     i box-offset>move ( value box value n )
+     eliminate ( value box )
+   loop
+   2drop ;
+
+: eliminate-box-possibilities ( box -- )
+   board-size 0 do
+     dup i box-offset>move board-element@
+     dup 0= if
+       drop
+     else
+       1- over eliminate-box
+     then
+   loop
+   drop ;
+
+: eliminate-all-box-possibilities ( -- )
+   board-size 0 do
+     i eliminate-box-possibilities
+   loop ;
 
 
 ( Global eliminator )
 
 : eliminate-all-possibilities ( -- )
    eliminate-all-row-possibilities
-   eliminate-all-column-possibilities ;
+   eliminate-all-column-possibilities
+   eliminate-all-box-possibilities ;
 
 
 ( Go! )
