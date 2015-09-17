@@ -67,6 +67,9 @@ create possible-moves
 : bit@ ( n bit# -- masked )
    mask@ and ;
 
+: bit-set? ( n bit# -- f )
+   bit@ 0<> ;
+
 : bit-set ( n bit# -- n )
    mask@ or ;
 
@@ -76,8 +79,7 @@ create possible-moves
 : bit-count ( n -- count )
    0 swap
    board-size 0 do
-     dup i mask@
-     and 0= invert if
+     dup i bit-set? if
        swap 1+ swap
      then
    loop
@@ -85,6 +87,13 @@ create possible-moves
 
 : bit-singular ( n - f )
    bit-count 1 = ;
+
+: first-set-bit ( n -- bit#/n )
+   board-size 0 do
+     dup i bit-set? if
+       drop i leave
+     then
+   loop ;
 
 
 ( Move translations )
@@ -191,7 +200,7 @@ create possible-moves
      drop ." - "
    else
      board-size 0 do
-       dup i bit@ 0<> if
+       dup i bit-set? if
          i 1+ .
        then
      loop
@@ -297,6 +306,16 @@ create possible-moves
 
 ( Global eliminator )
 
+: transfer-singular-possibilities ( -- )
+   board-size board-size * 0 do
+     i possible@ dup bit-singular if
+       first-set-bit 1+ i board-element!
+       0 i possible!
+     else
+       drop
+     then
+   loop ;
+
 : eliminate-all-possibilities ( -- )
    eliminate-all-row-possibilities
    eliminate-all-column-possibilities
@@ -312,5 +331,13 @@ initialise-possible
 eliminate-all-possibilities
 
 .possibles
+
+." ----------------------------------"
+
+transfer-singular-possibilities
+
+.board
+.possibles
+
 
 \ bye
