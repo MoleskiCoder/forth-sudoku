@@ -211,7 +211,7 @@ create possible-moves
      dup 0= if
        drop
      else
-       over eliminate-column
+       1- over eliminate-column
      then
    loop
    drop ;
@@ -231,7 +231,7 @@ create possible-moves
      dup 0= if
        drop
      else
-       over eliminate-row
+       1- over eliminate-row
      then
    loop
    drop ;
