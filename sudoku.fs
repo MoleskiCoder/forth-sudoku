@@ -327,8 +327,7 @@ create possible-moves
    begin
      eliminate-all-possibilities
      transfer-singular-possibilities
-     dup cr ." Eliminated:" .
-   0= until cr ;
+   0= until ;
 
 
 ( Go! )
@@ -337,9 +336,7 @@ create possible-moves
 
 initialise-possible
 
-." ----------------------------------"
 solve
-." ----------------------------------"
 
 .board
 .possibles
