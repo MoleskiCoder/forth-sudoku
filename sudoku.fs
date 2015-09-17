@@ -89,20 +89,38 @@ create possible-moves
 
 ( Move translations )
 
-: move-xy ( n -- x y )
+( xy <-> move )
+
+: move>xy ( n -- x y )
    board-size /mod ;
 
-: move-x ( n -- x )
-   move-xy drop ;
+: move>x ( n -- x )
+   move>xy drop ;
 
-: move-y ( n -- y )
-   move-xy nip ;
+: move>y ( n -- y )
+   move>xy nip ;
 
-: xy-move ( x y -- n )
+: xy>move ( x y -- n )
    board-size * + ;
 
-: move-box-xy ( n -- box-x box-y )
-   move-xy box-size / swap box-size / swap ;
+( box translations )
+
+: move>box-xy ( n -- box-x box-y )
+   move>xy box-size / swap box-size / swap ;
+
+: box>box-xy ( box-n -- box-x box-y )
+   box-size /mod ;
+
+: box>first-move ( box -- n )
+   box>box-xy
+   board-size box-size * * 
+   swap box-size * + ;
+
+: box-offset>move-offset ( n -- offset )
+   box>box-xy board-size * + ;
+
+: box-offset>move ( box offset -- n )
+   box-offset>move-offset swap box>first-move + ;
 
 
 ( Possible handlers.  Possible set is an array of bitsets )
@@ -149,14 +167,14 @@ create possible-moves
 
 : .board ( -- )
    board-size board-size * 0 do
-     i move-x 0= if
-       i move-y box-size mod 0= if
+     i move>x 0= if
+       i move>y box-size mod 0= if
          cr cr
          .box-break-horizontal
        then
        cr cr
      else
-       i move-x box-size mod 0= if
+       i move>x box-size mod 0= if
          .box-break-vertical
        then
      then
@@ -184,7 +202,7 @@ create possible-moves
 : .possibles ( -- )
    board-size 0 do
      board-size 0 do
-       i j xy-move .possible
+       i j xy>move .possible
      loop
      cr
    loop ;
@@ -202,14 +220,14 @@ create possible-moves
 : eliminate-column ( value x -- )
    board-size 0 do
      over over
-     i xy-move
+     i xy>move
      eliminate
    loop
    2drop ;
 
 : eliminate-column-possibilities ( x -- )
    board-size 0 do
-     dup i xy-move board-element@
+     dup i xy>move board-element@
      dup 0= if
        drop
      else
@@ -227,7 +245,7 @@ create possible-moves
 
 : eliminate-row ( value y -- )
    board-size 0 do
-     i over xy-move
+     i over xy>move
      rot dup rot
      eliminate
      swap
@@ -236,7 +254,7 @@ create possible-moves
 
 : eliminate-row-possibilities ( y -- )
    board-size 0 do
-     i over xy-move board-element@
+     i over xy>move board-element@
      dup 0= if
        drop
      else
@@ -249,6 +267,10 @@ create possible-moves
    board-size 0 do
      i eliminate-row-possibilities
    loop ;
+
+( Box eliminations )
+
+
 
 ( Global eliminator )
 
