@@ -128,7 +128,7 @@ create possible-moves
    swap box-size * + ;
 
 : box-offset>move-offset ( n -- offset )
-   box>box-xy board-size * + ;
+   box>box-xy xy>move ;
 
 : box-offset>move ( box offset -- n )
    box-offset>move-offset swap box>first-move + ;
