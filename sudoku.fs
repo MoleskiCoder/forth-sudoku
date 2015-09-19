@@ -163,6 +163,10 @@ create possible-moves
    rot bit-clear
    swap possible! ;
 
+: single-possibility! ( value n -- )
+   swap 0 swap bit-set
+   swap possible! ;
+
 
 ( Current boards, start -> solved. 1 - 9, zero is an entry in the possible set )
 
@@ -362,8 +366,7 @@ variable dangling
    dangling-in-row? if
      dangled @
      swap xy>move
-     swap 0 swap bit-set
-     swap possible!
+     single-possibility!
    else
      2drop
    then ;
@@ -391,8 +394,7 @@ variable dangling
    dangling-in-column? if
      dangled @
      xy>move
-     swap 0 swap bit-set
-     swap possible!
+     single-possibility!
    else
      2drop
    then ;
