@@ -158,6 +158,9 @@ create possible-moves
 : xy-possible? ( number x y -- f )
    xy>move possible? ;
 
+: box-offset-possible? ( box offset -- f )
+   box-offset>move possible? ;
+
 : eliminate ( bit# n -- )
    dup possible@
    rot bit-clear
@@ -404,6 +407,34 @@ variable dangling
      dup i eliminate-dangling-in-column
    loop drop ;
 
+( Box dangling ... )
+
+: dangling-in-box? ( number box -- f )
+   0 dangling !
+   board-size 0 do
+     over over
+     i box-offset-possible? if
+       i dangle
+     then
+   loop
+   2drop
+   dangling? ;
+
+: eliminate-dangling-in-box ( value box -- )
+   over over
+   dangling-in-box? if
+     dangled @
+     box-offset>move
+     single-possibility!
+   else
+     2drop
+   then ;
+
+: eliminate-all-box-dangling ( value -- )
+   board-size 0 do
+     dup i eliminate-dangling-in-box
+   loop drop ;
+
 
 ( The coup de dangling grace! )
 
@@ -411,6 +442,7 @@ variable dangling
    board-size 0 do
      i eliminate-all-row-dangling
      i eliminate-all-column-dangling
+     i eliminate-all-box-dangling
    loop ;
 
 
