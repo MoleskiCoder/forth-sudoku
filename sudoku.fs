@@ -353,11 +353,46 @@ variable row-dangled-column
      dup i eliminate-dangling-in-row
    loop drop ;
 
+( Column dangling ... )
+
+variable column-dangled-row
+
+: dangling-in-column? ( number x -- f )
+   0 dangling !
+   board-size 0 do
+     over over
+     i xy>move
+     possible@ swap bit-set? if
+       1 dangling +!
+       i column-dangled-row ! ( as a side effect, leave column dangled row )
+     then
+   loop
+   drop drop
+   dangling @ 1 = ;
+
+: eliminate-dangling-in-column ( value column -- )
+   over over
+   dangling-in-column? if
+     column-dangled-row @
+     xy>move
+     swap 0 swap bit-set
+     swap possible!
+   else
+     drop drop
+   then ;
+
+: eliminate-all-column-dangling ( value -- )
+   board-size 0 do
+     dup i eliminate-dangling-in-column
+   loop drop ;
+
+
 ( The coup de dangling grace! )
 
 : eliminate-all-dangling ( -- )
    board-size 0 do
      i eliminate-all-row-dangling
+     i eliminate-all-column-dangling
    loop ;
 
 
