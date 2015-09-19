@@ -238,15 +238,8 @@ create possible-moves
      cr
    loop ;
 
+
 ( Solver )
-
-( 
-  Using https://www.sudokuoftheday.com/techniques/
-  as a guide, I now realise that the current code
-  only implements the "easy" techniques.
-
-  Back to the drawing board!
-)
 
 : initialise-possible ( -- )
    board-size board-size * 0 do
