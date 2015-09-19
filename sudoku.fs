@@ -152,6 +152,12 @@ create possible-moves
 : possible! ( value n -- )
    possible ! ;
 
+: possible? ( number n -- f )
+   possible@ swap bit-set? ;
+
+: xy-possible? ( number x y -- f )
+   xy>move possible? ;
+
 : eliminate ( bit# n -- )
    dup possible@
    rot bit-clear
@@ -335,16 +341,17 @@ variable dangling
 : dangling? ( -- f )
    dangling @ 1 = ;
 
+: dangle ( n -- )
+   dangled ! dangling++ ;
+
 ( Row dangling ... )
 
 : dangling-in-row? ( number y -- f )
    0 dangling !
    board-size 0 do
      over over
-     i swap xy>move
-     possible@ swap bit-set? if
-       dangling++
-       i dangled !
+     i swap xy-possible? if
+       i dangle
      then
    loop
    2drop
@@ -353,8 +360,8 @@ variable dangling
 : eliminate-dangling-in-row ( value row -- )
    over over
    dangling-in-row? if
-     dangled @ swap
-     xy>move
+     dangled @
+     swap xy>move
      swap 0 swap bit-set
      swap possible!
    else
@@ -372,10 +379,8 @@ variable dangling
    0 dangling !
    board-size 0 do
      over over
-     i xy>move
-     possible@ swap bit-set? if
-       dangling++
-       i dangled !
+     i xy-possible? if
+       i dangle
      then
    loop
    2drop
