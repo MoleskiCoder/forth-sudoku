@@ -325,11 +325,17 @@ create possible-moves
   Look for where a possibility is only
   mentioned once in a row, column or box )
 
+variable dangled
+
 variable dangling
 
-( Row dangling ... )
+: dangling++ ( -- )
+   1 dangling +! ;
 
-variable row-dangled-column
+: dangling? ( -- f )
+   dangling @ 1 = ;
+
+( Row dangling ... )
 
 : dangling-in-row? ( number y -- f )
    0 dangling !
@@ -337,22 +343,22 @@ variable row-dangled-column
      over over
      i swap xy>move
      possible@ swap bit-set? if
-       1 dangling +!
-       i row-dangled-column ! ( as a side effect, leave row dangled column )
+       dangling++
+       i dangled !
      then
    loop
-   drop drop
-   dangling @ 1 = ;
+   2drop
+   dangling? ;
 
 : eliminate-dangling-in-row ( value row -- )
    over over
    dangling-in-row? if
-     row-dangled-column @ swap
+     dangled @ swap
      xy>move
      swap 0 swap bit-set
      swap possible!
    else
-     drop drop
+     2drop
    then ;
 
 : eliminate-all-row-dangling ( value -- )
@@ -362,30 +368,28 @@ variable row-dangled-column
 
 ( Column dangling ... )
 
-variable column-dangled-row
-
 : dangling-in-column? ( number x -- f )
    0 dangling !
    board-size 0 do
      over over
      i xy>move
      possible@ swap bit-set? if
-       1 dangling +!
-       i column-dangled-row ! ( as a side effect, leave column dangled row )
+       dangling++
+       i dangled !
      then
    loop
-   drop drop
-   dangling @ 1 = ;
+   2drop
+   dangling? ;
 
 : eliminate-dangling-in-column ( value column -- )
    over over
    dangling-in-column? if
-     column-dangled-row @
+     dangled @
      xy>move
      swap 0 swap bit-set
      swap possible!
    else
-     drop drop
+     2drop
    then ;
 
 : eliminate-all-column-dangling ( value -- )
