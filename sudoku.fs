@@ -314,6 +314,53 @@ create possible-moves
    loop ;
 
 
+( Dangling possibilities
+  Look for where a possibility is only
+  mentioned once in a row, column or box )
+
+variable dangling
+
+( Row dangling ... )
+
+variable row-dangled-column
+
+: dangling-in-row? ( number y -- f )
+   0 dangling !
+   board-size 0 do
+     over over
+     i swap xy>move
+     possible@ swap bit-set? if
+       1 dangling +!
+       i row-dangled-column ! ( as a side effect, leave row dangled column )
+     then
+   loop
+   drop drop
+   dangling @ 1 = ;
+
+: eliminate-dangling-in-row ( value row -- )
+   over over
+   dangling-in-row? if
+     row-dangled-column @ swap
+     xy>move
+     swap 0 swap bit-set
+     swap possible!
+   else
+     drop drop
+   then ;
+
+: eliminate-all-row-dangling ( value -- )
+   board-size 0 do
+     dup i eliminate-dangling-in-row
+   loop drop ;
+
+( The coup de dangling grace! )
+
+: eliminate-all-dangling ( -- )
+   board-size 0 do
+     i eliminate-all-row-dangling
+   loop ;
+
+
 ( Global eliminator )
 
 : transfer-singular-possibilities ( -- )
@@ -331,7 +378,8 @@ create possible-moves
 : eliminate-all-possibilities ( -- )
    eliminate-all-row-possibilities
    eliminate-all-column-possibilities
-   eliminate-all-box-possibilities ;
+   eliminate-all-box-possibilities 
+   eliminate-all-dangling ;
 
 : solve ( -- )
    begin
@@ -351,5 +399,6 @@ solve
 .board
 .possibles
 
+.s
 
 \ bye
