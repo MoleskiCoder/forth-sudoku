@@ -445,22 +445,22 @@ variable dangling
   most people use first when completing paper Sudoku puzzles.
 
   Choose a row, column or box, and then go through each of the
-  numbers that hasn’t already been placed. Because of other placements,
+  numbers that hasn't already been placed. Because of other placements,
   the positions where you could place that number will be limited. Often
-  there will be two or three places that are valid, but if you’re lucky,
-  there’ll only be one. If you’ve narrowed it down to only one valid
+  there will be two or three places that are valid, but if you're lucky,
+  there'll only be one. If you've narrowed it down to only one valid
   place where you can put the number- you can fill that number
-  straight in, since it can’t go anywhere else!
+  straight in, since it can't go anywhere else!
 
   https://www.sudokuoftheday.com/techniques/single-position/ )
 
 ( "Single Candidate" *Done*
-  This technique is very easy - especially if you’re using pencilmarks
+  This technique is very easy - especially if you're using pencilmarks
   to store what candidates are still possible within each cell.
 
-  If you’ve managed to rule out all other possibilities for a
+  If you've managed to rule out all other possibilities for a
   particular cell <by examining the surrounding column, row and box>,
-  so there’s only one number left that could possibly fit there - you
+  so there's only one number left that could possibly fit there - you
   can fill in that number.
 
   https://www.sudokuoftheday.com/techniques/single-candidate/ )
@@ -502,11 +502,11 @@ variable dangling
   https://www.sudokuoftheday.com/techniques/naked-pairs-triples/ )
 
 ( "Hidden Pairs/Triples"
-  Hopefully you’ve got the hang of finding Naked Pairs and Triples - if
+  Hopefully you've got the hang of finding Naked Pairs and Triples - if
   not, practise looking for those before trying to understand the
   hidden equivalent!
 
-  Hidden pairs and triples are quite a bit trickier to spot - they’re
+  Hidden pairs and triples are quite a bit trickier to spot - they're
   hiding after all!
 
   This technique is also known as Hidden Subset or Unique Subset,
@@ -532,12 +532,12 @@ variable dangling
   you to use knowledge about rows to remove candidates from
   columns, and vice versa.
 
-  Make sure you’re happy with why X-Wings work before moving
+  Make sure you're happy with why X-Wings work before moving
   on to Swordfish!
 
-  The complexity here is that you’re using knowledge from
-  3 rows at the same time - and that’s what makes them
-  harder to spot. Unlike X-Wings, they don’t form a
+  The complexity here is that you're using knowledge from
+  3 rows at the same time - and that's what makes them
+  harder to spot. Unlike X-Wings, they don't form a
   simple rectangle.
 
   https://www.sudokuoftheday.com/techniques/swordfish/ )
