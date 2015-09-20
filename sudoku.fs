@@ -440,7 +440,7 @@ variable dangling
 
 ( -------------- Easy ------------------ )
 
-( "Single Position"
+( "Single Position" *Done*
   This is the easiest technique to apply by eye - and the one that
   most people use first when completing paper Sudoku puzzles.
 
@@ -454,7 +454,7 @@ variable dangling
 
   https://www.sudokuoftheday.com/techniques/single-position/ )
 
-( "Single Candidate"
+( "Single Candidate" *Done*
   This technique is very easy - especially if you’re using pencilmarks
   to store what candidates are still possible within each cell.
 
