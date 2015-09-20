@@ -438,6 +438,112 @@ variable dangling
      i eliminate-all-box-dangling
    loop ;
 
+( -------------- Easy ------------------ )
+
+( "Single Position"
+  This is the easiest technique to apply by eye - and the one that
+  most people use first when completing paper Sudoku puzzles.
+
+  Choose a row, column or box, and then go through each of the
+  numbers that hasn’t already been placed. Because of other placements,
+  the positions where you could place that number will be limited. Often
+  there will be two or three places that are valid, but if you’re lucky,
+  there’ll only be one. If you’ve narrowed it down to only one valid
+  place where you can put the number- you can fill that number
+  straight in, since it can’t go anywhere else!
+
+  https://www.sudokuoftheday.com/techniques/single-position/ )
+
+( "Single Candidate"
+  This technique is very easy - especially if you’re using pencilmarks
+  to store what candidates are still possible within each cell.
+
+  If you’ve managed to rule out all other possibilities for a
+  particular cell <by examining the surrounding column, row and box>,
+  so there’s only one number left that could possibly fit there - you
+  can fill in that number.
+
+  https://www.sudokuoftheday.com/techniques/single-candidate/ )
+
+( -------------- Medium ------------------ )
+
+( "Candidate line"
+  Find where a candidate within a box is
+  in a single row or column, and eliminate
+  other boxes in the row or column line.
+
+  https://www.sudokuoftheday.com/techniques/candidate-lines/ )
+
+( "Double Pairs"
+  This technique relies on spotting two pairs of
+  candidates for a value, and using these to rule
+  out candidates from other boxes.
+
+  https://www.sudokuoftheday.com/techniques/double-pairs/ )
+
+( "Multiple Lines"
+  This is very similar to the Double Pairs Test, but
+  is a little harder to spot. It works in the same way,
+  but the candidates that occupy the lines could be spread
+  across two of the blocks, and there could be several
+  candidates in each line.
+
+  https://www.sudokuoftheday.com/techniques/multiple-lines/ )
+
+( -------------- Advanced ------------------ )
+
+( "Naked Pairs/Triples"
+  This technique is known as "Naked Subset" or "Disjoint Subset"
+  in general, and works by looking for candidates that can be removed
+  from other cells. Naked Pairs are when there are just two candidates
+  being looked for, Naked Triple when there are three, and Naked Quads
+  when there are four.
+
+  https://www.sudokuoftheday.com/techniques/naked-pairs-triples/ )
+
+( "Hidden Pairs/Triples"
+  Hopefully you’ve got the hang of finding Naked Pairs and Triples - if
+  not, practise looking for those before trying to understand the
+  hidden equivalent!
+
+  Hidden pairs and triples are quite a bit trickier to spot - they’re
+  hiding after all!
+
+  This technique is also known as Hidden Subset or Unique Subset,
+  in general.
+
+  https://www.sudokuoftheday.com/techniques/hidden-pairs-triples/ )
+
+( -------------- Master ------------------ )
+
+( "X-Wings"
+  X-Wings are fairly easy to spot, but a little harder
+  to understand than some other techniques. Like others
+  it relies on using positions of pencilmarks to infer
+  enough to allow you to eliminate some other candidates.
+
+  X-Wings are when there are two lines, each having the
+  same two positions for a number.
+
+  https://www.sudokuoftheday.com/techniques/x-wings/ )
+
+( "Swordfish"
+  This is very similar to using X-Wings, in that it will allow
+  you to use knowledge about rows to remove candidates from
+  columns, and vice versa.
+
+  Make sure you’re happy with why X-Wings work before moving
+  on to Swordfish!
+
+  The complexity here is that you’re using knowledge from
+  3 rows at the same time - and that’s what makes them
+  harder to spot. Unlike X-Wings, they don’t form a
+  simple rectangle.
+
+  https://www.sudokuoftheday.com/techniques/swordfish/ )
+
+( ---------------------------------------- )
+
 
 ( Global eliminator )
 
