@@ -284,10 +284,9 @@ create possible-moves
 
 : eliminate-row ( value y -- )
    board-size 0 do
-     i over xy>move
-     rot dup rot
-     eliminate
-     swap
+      2dup
+      i swap xy>move
+      eliminate
    loop
    2drop ;
 
@@ -312,8 +311,8 @@ create possible-moves
 : eliminate-box ( value box -- )
    board-size 0 do
      2dup
-     i box-offset>move ( value box value n )
-     eliminate ( value box )
+     i box-offset>move
+     eliminate
    loop
    2drop ;
 
