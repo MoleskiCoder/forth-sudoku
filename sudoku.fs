@@ -32,6 +32,7 @@ An aide memoire to the layout of the puzzle
 
 3 constant box-size
 9 constant board-size
+board-size board-size * constant element-count
 
 
 create board
@@ -65,7 +66,7 @@ create board
 
 
 create possible-moves
-  board-size board-size * cells allot
+  element-count cells allot
 
 
 ( bitset operations )
@@ -203,7 +204,7 @@ create possible-moves
    ." ------------+------------+-----------" ;
 
 : .board ( -- )
-   board-size board-size * 0 do
+   element-count 0 do
      i move>x 0= if
        i move>y box-size mod 0= if
          cr cr
@@ -248,7 +249,7 @@ create possible-moves
 ( Solver )
 
 : initialise-possible ( -- )
-   board-size board-size * 0 do
+   element-count 0 do
      i board-element@ 0= if -1 else 0 then
      i possible!
    loop ;
@@ -257,7 +258,7 @@ create possible-moves
 
 : eliminate-column ( value x -- )
    board-size 0 do
-     over over
+     2dup
      i xy>move
      eliminate
    loop
@@ -310,7 +311,7 @@ create possible-moves
 
 : eliminate-box ( value box -- )
    board-size 0 do
-     over over ( value box value box )
+     2dup
      i box-offset>move ( value box value n )
      eliminate ( value box )
    loop
@@ -338,7 +339,6 @@ create possible-moves
   mentioned once in a row, column or box )
 
 variable dangled
-
 variable dangling
 
 : dangling++ ( -- )
@@ -355,7 +355,7 @@ variable dangling
 : dangling-in-row? ( number y -- f )
    0 dangling !
    board-size 0 do
-     over over
+     2dup
      i swap xy-possible? if
        i dangle
      then
@@ -364,7 +364,7 @@ variable dangling
    dangling? ;
 
 : eliminate-dangling-in-row ( value row -- )
-   over over
+   2dup
    dangling-in-row? if
      dangled @
      swap xy>move
@@ -383,7 +383,7 @@ variable dangling
 : dangling-in-column? ( number x -- f )
    0 dangling !
    board-size 0 do
-     over over
+     2dup
      i xy-possible? if
        i dangle
      then
@@ -392,7 +392,7 @@ variable dangling
    dangling? ;
 
 : eliminate-dangling-in-column ( value column -- )
-   over over
+   2dup
    dangling-in-column? if
      dangled @
      xy>move
@@ -411,7 +411,7 @@ variable dangling
 : dangling-in-box? ( number box -- f )
    0 dangling !
    board-size 0 do
-     over over
+     2dup
      i box-offset-possible? if
        i dangle
      then
@@ -420,7 +420,7 @@ variable dangling
    dangling? ;
 
 : eliminate-dangling-in-box ( value box -- )
-   over over
+   2dup
    dangling-in-box? if
      dangled @
      box-offset>move
@@ -601,9 +601,9 @@ create eliminator-data 3 cells allot
 
 ( Global eliminator )
 
-: transfer-singular-possibilities ( -- )
+: transfer-singular-possibilities ( -- solved-count )
    0
-   board-size board-size * 0 do
+   element-count 0 do
      i possible@ dup bit-singular if
        first-set-bit 1+ i board-element!
        0 i possible!
