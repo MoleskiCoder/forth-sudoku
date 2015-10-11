@@ -92,7 +92,7 @@ include candidate_line.fs
 : transfer-singular-possibilities ( -- solved-count )
    0
    element-count 0 do
-     i possible@ dup bit-singular if
+     i possible@ dup bit-singular? if
        first-set-bit 1+ i board-element!
        0 i possible!
        1+

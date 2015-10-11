@@ -24,7 +24,7 @@
    loop
    drop ;
 
-: bit-singular ( n - f )
+: bit-singular? ( n - f )
    bit-count 1 = ;
 
 : first-set-bit ( n -- bit#/n )
