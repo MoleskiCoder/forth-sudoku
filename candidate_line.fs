@@ -6,46 +6,82 @@
   https://www.sudokuoftheday.com/techniques/candidate-lines/ )
 
 create eliminator-data 3 cells allot
+variable eliminator-box
 
-: erase-eliminator-data
+: erase-eliminator
    eliminator-data 3 cells erase ;
 
-: eliminate-box-candidate-row-value ( box row value -- )
-   erase-eliminator-data
-   drop drop drop ;
+: eliminator++ ( offset -- )
+   cells eliminator-data + 1 swap +! ;
 
-: eliminate-box-candidate-column-value ( box column value -- )
-   erase-eliminator-data
-   drop drop drop ;
+: eliminator@ ( offset -- value )
+   cells eliminator-data @ ;
 
-: eliminate-box-candidate-row ( box row -- )
-   board-size 0 do
-     over over
-     i eliminate-box-candidate-row-value
-   loop 2drop ;
-
-: eliminate-box-candidate-column ( box column -- )
-   board-size 0 do
-     over over
-     i eliminate-box-candidate-column-value
-   loop 2drop ;
-
-: eliminate-box-candidate-rows ( box -- )
+: singular-eliminator ( -- offset/-1 )
+   0 -1 ( count last )
    box-size 0 do
-     dup i eliminate-box-candidate-row
+     eliminator@ 0> if
+       drop 1+ i ( count last )
+     then
+   loop
+   swap ( last count )
+   1 <> if
+     drop -1
+   then ;
+
+: eliminate-box-candidate-row-value ( row value -- )
+
+over over
+." Box:" eliminator-box @ . ." Value:" . ." Row:" . cr
+
+   erase-eliminator
+   box-size 0 do
+     over over
+     eliminator-box @
+     rot i box-box-xy>move
+     possible? if
+." +"
+       i eliminator++
+     then
+   loop
+   singular-eliminator dup -1 = if
+     drop
+   else
+     . cr
+     \ I've got a column available to check for elimination!
+   then
+   2drop ;
+
+: eliminate-box-candidate-column-value ( column value -- )
+   erase-eliminator
+   2drop ;
+
+: eliminate-box-candidate-row ( row -- )
+   board-size 0 do
+     dup i eliminate-box-candidate-row-value
    loop drop ;
 
-: eliminate-box-candidate-columns ( box -- )
-   box-size 0 do
-     dup i eliminate-box-candidate-column
+: eliminate-box-candidate-column ( column -- )
+   board-size 0 do
+     dup i eliminate-box-candidate-column-value
    loop drop ;
 
-: eliminate-box-candidate-lines ( box -- )
-   dup
+: eliminate-box-candidate-rows ( -- )
+   box-size 0 do
+     i eliminate-box-candidate-row
+   loop ;
+
+: eliminate-box-candidate-columns ( -- )
+   box-size 0 do
+     i eliminate-box-candidate-column
+   loop ;
+
+: eliminate-box-candidate-lines ( -- )
    eliminate-box-candidate-rows
    eliminate-box-candidate-columns ;
 
 : eliminate-all-candidate-lines ( -- )
    board-size 0 do
-     i eliminate-box-candidate-lines
+     i eliminator-box !
+     eliminate-box-candidate-lines
    loop ;
