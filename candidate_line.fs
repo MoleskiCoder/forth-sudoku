@@ -11,16 +11,19 @@ variable eliminator-box
 : erase-eliminator
    eliminator-data 3 cells erase ;
 
+: eliminator ( offset -- addr )
+   cells eliminator-data + ;
+
 : eliminator++ ( offset -- )
-   cells eliminator-data + 1 swap +! ;
+   eliminator 1 swap +! ;
 
 : eliminator@ ( offset -- value )
-   cells eliminator-data @ ;
+   eliminator @ ;
 
 : singular-eliminator ( -- offset/-1 )
    0 -1 ( count last )
    box-size 0 do
-     eliminator@ 0> if
+     i eliminator@ if
        drop 1+ i ( count last )
      then
    loop
@@ -28,6 +31,12 @@ variable eliminator-box
    1 <> if
      drop -1
    then ;
+
+: .eliminators ( -- )
+   ." Eleminators: "
+   0 eliminator@ .
+   1 eliminator@ .
+   2 eliminator@ . cr ;
 
 : eliminate-box-candidate-row-value ( row value -- )
 
@@ -44,10 +53,13 @@ variable eliminator-box
        i eliminator++
      then
    loop
+
+.eliminators
+
    singular-eliminator dup -1 = if
      drop
    else
-     . cr
+     ." Eliminate column: " . cr
      \ I've got a column available to check for elimination!
    then
    2drop ;
