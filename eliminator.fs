@@ -11,9 +11,7 @@
 : eliminate-column-possibilities ( x -- )
    board-size 0 do
      dup i xy>move board-element@
-     dup 0= if
-       drop
-     else
+     ?dup-if
        1- over eliminate-column
      then
    loop
@@ -37,9 +35,7 @@
 : eliminate-row-possibilities ( y -- )
    board-size 0 do
      i over xy>move board-element@
-     dup 0= if
-       drop
-     else
+     ?dup-if
        1- over eliminate-row
      then
    loop
@@ -63,9 +59,7 @@
 : eliminate-box-possibilities ( box -- )
    board-size 0 do
      dup i box-offset>move board-element@
-     dup 0= if
-       drop
-     else
+     ?dup-if
        1- over eliminate-box
      then
    loop

@@ -33,15 +33,15 @@
 
 : .possible ( n -- )
    ."  "
-   possible@ dup 0= if
-     drop ." - "
-   else
+   possible@ ?dup-if
      board-size 0 do
        dup i bit-set? if
          i 1+ .
        then
      loop
      drop
+   else
+     ." - "
    then
    ."  " ;
 
