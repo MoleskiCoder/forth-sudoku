@@ -31,12 +31,12 @@ variable eliminator-box
 
 : eliminate-box-candidate-row-value ( row value -- )
 
-over over
+2dup
 ." Box:" eliminator-box @ . ." Value:" . ." Row:" . cr
 
    erase-eliminator
    box-size 0 do
-     over over
+     2dup
      eliminator-box @
      rot i box-box-xy>move
      possible? if
