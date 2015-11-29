@@ -205,3 +205,15 @@ board-size dup * constant cell-count
      i .board-element
    loop
    cr cr .box-break-horizontal cr ;
+
+: game ( -- )
+  utime
+  solve? if
+    utime 2swap d-
+    .board
+    cr cr ." Time taken " d. ." microseconds" cr cr
+  else
+    cr cr ." No solution exists"
+  then ;
+
+game
