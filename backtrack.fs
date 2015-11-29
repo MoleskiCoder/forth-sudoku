@@ -174,3 +174,34 @@ board-size dup * constant cell-count
      then
    loop
    drop 0 ;                                         \ this triggers backtracking
+
+
+\ Board display
+
+: .board-element ( n -- )
+   ."  "
+   grid@ dup 0= if drop ." - " else .  then
+   ."  " ;
+
+: .box-break-vertical ( -- )
+   ." |" ;
+
+: .box-break-horizontal ( -- )
+   ." ------------+------------+-----------" ;
+
+: .board ( -- )
+   cell-count 0 do
+     i move>x 0= if
+       i move>y box-size mod 0= if
+         cr cr
+         .box-break-horizontal
+       then
+       cr cr
+     else
+       i move>x box-size mod 0= if
+         .box-break-vertical
+       then
+     then
+     i .board-element
+   loop
+   cr cr .box-break-horizontal cr ;
