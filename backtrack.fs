@@ -27,6 +27,8 @@ create puzzle
 9 constant board-size
 board-size dup * constant cell-count
 
+: unassigned? ( -- )
+   0= ;
 
 \ Puzzle access methods
 
@@ -97,7 +99,7 @@ board-size dup * constant cell-count
 : used-in-column? ( number n -- f )
    move>column-start
    board-size 0 ?do
-     2dup i board-size * + grid@ = if unloop 2drop -1 exit then
+     2dup i xy>move grid@ = if unloop 2drop -1 exit then
    loop 2drop 0 ;
 
 
@@ -144,7 +146,7 @@ board-size dup * constant cell-count
 
 : find-unassigned-location ( -- n/-1 )
    cell-count 0 ?do
-     i grid@ unassigned = if i unloop exit then
+     i grid@ unassigned? if i unloop exit then
    loop -1 ;
 
 
@@ -191,7 +193,7 @@ board-size dup * constant cell-count
 
 : .board ( -- )
    cell-count 0 do
-     i move>x 0= if
+     i move>x unassigned? if
        i move>y box-size mod 0= if
          cr cr
          .box-break-horizontal
