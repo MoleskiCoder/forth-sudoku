@@ -36,8 +36,8 @@ board-size dup * constant cell-count
 : grid@ ( n -- number )
    grid-cell @ ;
 
-: grid! ( n number -- )
-   swap grid-cell ! ;
+: grid! ( number n -- )
+   grid-cell ! ;
 
 
 \ Move and grid position translation methods
@@ -80,10 +80,10 @@ board-size dup * constant cell-count
 
 \ simplified in forth by row cells being contiguious in the grid.
 
-: used-in-row? ( n number -- f )
-   swap move>row-start swap
+: used-in-row? ( number n -- f )
+   move>row-start
    board-size 0 ?do
-     2dup swap i + grid@ = if unloop 2drop -1 exit then
+     2dup i + grid@ = if unloop 2drop -1 exit then
    loop 2drop 0 ;
 
 
@@ -94,10 +94,10 @@ board-size dup * constant cell-count
 
 \ Very similar to used-in-row?, with the loop increment multiplied by board-size.
 
-: used-in-column? ( n number -- f )
-   swap move>column-start swap
+: used-in-column? ( number n -- f )
+   move>column-start
    board-size 0 ?do
-     2dup swap i board-size * + grid@ = if unloop 2drop -1 exit then
+     2dup i board-size * + grid@ = if unloop 2drop -1 exit then
    loop 2drop 0 ;
 
 
@@ -108,10 +108,10 @@ board-size dup * constant cell-count
 
 \ Convert the loop into a box xy, then calculate an offset to obtain cell value.
 
-: used-in-box? ( n number - f )
-   swap move>box-start swap
+: used-in-box? ( number n - f )
+   move>box-start
    board-size 0 ?do
-     2dup swap
+     2dup
      i box-size / board-size *
      i box-size mod + +
      grid@ = if unloop 2drop -1 exit then
@@ -124,7 +124,7 @@ board-size dup * constant cell-count
 \ number to the given row,column location. As assignment is legal if it that
 \ number is not already used in the row, column, or box.
 
-: available? ( n number -- f )
+: available? ( number n -- f )
    2dup used-in-row? 0= >r
    2dup used-in-column? 0= >r
         used-in-box? 0=
@@ -165,12 +165,12 @@ board-size dup * constant cell-count
    recursive
    find-unassigned-location dup -1 = if exit then   \ success!
    10 1 ?do                                         \ consider digits 1 to 9
-     dup i available? if                            \ if looks promising
-       dup i grid!                                  \ make tentative assignment
+     i over available? if                           \ if looks promising
+       i over grid!                                 \ make tentative assignment
        solve? if
          unloop drop -1 exit                        \ recur, if success, yay!
        then
-       dup unassigned grid!                         \ failure, unmake & try again
+       unassigned over grid!                        \ failure, unmake & try again
      then
    loop
    drop 0 ;                                         \ this triggers backtracking
@@ -213,6 +213,7 @@ board-size dup * constant cell-count
     .board
     cr cr ." Time taken " d. ." microseconds" cr cr
   else
+    2drop
     cr cr ." No solution exists"
   then ;
 
