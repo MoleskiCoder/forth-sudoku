@@ -127,10 +127,10 @@ board-size dup * constant cell-count
 \ number is not already used in the row, column, or box.
 
 : available? ( number n -- f )
-   2dup used-in-row? 0= >r
-   2dup used-in-column? 0= >r
+   2dup used-in-row? >r r@ if 2drop rdrop 0 exit then
+   2dup used-in-column? >r r@ if 2drop rdrop rdrop 0 exit then
         used-in-box? 0=
-   r> r> and and ;
+   r> 0= r> 0= and and ;
 
 
 \ Function: find-unassigned-location
