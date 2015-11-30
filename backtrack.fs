@@ -182,7 +182,7 @@ board-size dup * constant cell-count
 
 : .board-element ( n -- )
    ."  "
-   grid@ dup 0= if drop ." - " else .  then
+   grid@ dup unavailable? if drop ." - " else .  then
    ."  " ;
 
 : .box-break-vertical ( -- )
