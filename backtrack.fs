@@ -48,10 +48,10 @@ board-size dup * constant cell-count
    board-size /mod ;
 
 : move>x ( n -- x )
-   move>xy drop ;
+   board-size mod ;
 
 : move>y ( n -- y )
-   move>xy nip ;
+   board-size / ;
 
 : xy>move ( x y -- n )
    board-size * + ;
@@ -85,7 +85,8 @@ board-size dup * constant cell-count
 : used-in-row? ( number n -- f )
    move>row-start
    board-size 0 ?do
-     2dup i + grid@ = if unloop 2drop -1 exit then
+     2dup i +
+     grid@ = if unloop 2drop -1 exit then
    loop 2drop 0 ;
 
 
@@ -99,7 +100,8 @@ board-size dup * constant cell-count
 : used-in-column? ( number n -- f )
    move>column-start
    board-size 0 ?do
-     2dup i xy>move grid@ = if unloop 2drop -1 exit then
+     2dup i xy>move
+     grid@ = if unloop 2drop -1 exit then
    loop 2drop 0 ;
 
 
@@ -113,9 +115,7 @@ board-size dup * constant cell-count
 : used-in-box? ( number n - f )
    move>box-start
    board-size 0 ?do
-     2dup
-     i box-size / board-size *
-     i box-size mod + +
+     2dup i box-size /mod board-size * + +
      grid@ = if unloop 2drop -1 exit then
    loop 2drop 0 ;
 
@@ -182,7 +182,7 @@ board-size dup * constant cell-count
 
 : .board-element ( n -- )
    ."  "
-   grid@ dup unavailable? if drop ." - " else .  then
+   grid@ dup unassigned? if drop ." - " else .  then
    ."  " ;
 
 : .box-break-vertical ( -- )
