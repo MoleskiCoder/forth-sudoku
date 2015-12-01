@@ -27,6 +27,8 @@ create puzzle
 board-size dup * constant cell-count
 
 
+\ Rather than compare against zero, make the code more meaningful to readers.
+
 : unassigned? ( -- )
    0= ;
 
@@ -78,7 +80,7 @@ board-size dup * constant cell-count
 \ Returns a boolean which indicates whether any assigned entry
 \ in the specified row matches the given number.
 
-\ simplified in forth by row cells being contiguious in the grid.
+\ simplified in Forth by row cells being contiguious in the grid.
 
 : used-in-row? ( number n -- f )
    move>row-start puzzle +
@@ -124,6 +126,9 @@ board-size dup * constant cell-count
 \ number to the given row,column location. As assignment is legal if it that
 \ number is not already used in the row, column, or box.
 
+\ Because Forth doesn't seem to shortcut logical operations, we must explicitly leave early
+\ if possible.
+
 : available? ( number n -- f )
    2dup used-in-row? >r r@ if 2drop rdrop 0 exit then
    2dup used-in-column? >r r@ if 2drop rdrop rdrop 0 exit then
@@ -141,6 +146,8 @@ board-size dup * constant cell-count
 \ for the forth version, we'll just use the return stack.
 \ 0 or above is a valid grid reference, -1 indicates no unnassigned
 \ location is available.
+
+\ For performance reasons in Forth, I've inlined the puzzle + grid offset access.
 
 : find-unassigned-location ( -- n/-1 )
    cell-count 0 ?do
