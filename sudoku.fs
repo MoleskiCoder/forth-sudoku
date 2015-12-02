@@ -30,49 +30,49 @@ board-size dup * constant cell-count
 \ Rather than compare against zero, make the code more meaningful to readers.
 
 : unassigned? ( -- )
-   0= ;
+   ]] 0= [[ ; immediate
 
 
 \ Puzzle access methods
 
 : grid@ ( n -- number )
-   puzzle + c@ ;
+   ]] puzzle + c@ [[ ; immediate
 
 : grid! ( number n -- )
-   puzzle + c! ;
+   ]] puzzle + c! [[ ; immediate
 
 
 \ Move and grid position translation methods
 
 : move>xy ( n -- x y )
-   board-size /mod ;
+   ]] board-size /mod [[ ; immediate
 
 : move>x ( n -- x )
-   board-size mod ;
+   ]] board-size mod [[ ; immediate
 
 : move>y ( n -- y )
-   board-size / ;
+   ]] board-size / [[ ; immediate
 
 : xy>move ( x y -- n )
-   board-size * + ;
+   ]] board-size * + [[ ; immediate
 
 
 \ Row, column and box start positions
 
 : move>row-start ( n -- n )
-   board-size / board-size * ;
+   ]] move>y board-size * [[ ; immediate
 
 : move>column-start ( n -- n )
-   board-size mod ;
+   ]] move>x [[ ; immediate
 
 : box-side-start ( n -- n )
-   dup box-size mod - ;
+   ]] dup box-size mod - [[ ; immediate
 
 : move>box-start ( n -- n )
-   move>xy
+   ]] move>xy
    box-side-start swap
    box-side-start swap
-   xy>move ;
+   xy>move [[ ; immediate
 
 
 \ Function: used-in-row?
@@ -100,7 +100,7 @@ board-size dup * constant cell-count
 : used-in-column? ( number n -- f )
    move>column-start puzzle +
    board-size 0 ?do
-     2dup i board-size * +
+     2dup i xy>move
      c@ = if unloop 2drop -1 exit then
    loop 2drop 0 ;
 
@@ -115,7 +115,7 @@ board-size dup * constant cell-count
 : used-in-box? ( number n - f )
    move>box-start puzzle +
    board-size 0 ?do
-     2dup i box-size /mod board-size * + +
+     2dup i box-size /mod xy>move +
      c@ = if unloop 2drop -1 exit then
    loop 2drop 0 ;
 
@@ -151,7 +151,7 @@ board-size dup * constant cell-count
 
 : find-unassigned-location ( -- n/-1 )
    cell-count 0 ?do
-     puzzle i + c@ unassigned? if i unloop exit then
+     i grid@ unassigned? if i unloop exit then
    loop -1 ;
 
 
