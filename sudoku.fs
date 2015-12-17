@@ -137,27 +137,6 @@ board-size dup * constant cell-count
         used-in-box? 0= ;
 
 
-\ Function: find-unassigned-location
-\ ----------------------------------
-\ Searches the grid to find an entry that is still unassigned. If found,
-\ the reference parameters row, column will be set the location that is
-\ unassigned, and true is returned. If no unassigned entries remain, false
-\ is returned.
-
-\ for the forth version, we'll just use the return stack.
-\ 0 or above is a valid grid reference, -1 indicates no unnassigned
-\ location is available.
-
-\ For performance reasons in Forth, I've inlined the puzzle + grid offset access.
-
-: find-unassigned-location ( -- n/-1 )
-   puzzle
-   cell-count 0 ?do
-     dup @ unassigned? if drop i unloop exit then
-     cell+
-   loop drop -1 ;
-
-
 \ Function: solve?
 \ ----------------
 \ Takes a partially filled-in grid and attempts to assign values to all
@@ -171,18 +150,19 @@ board-size dup * constant cell-count
 \ been examined and none worked out, return false to backtrack to previous
 \ decision point.
 
-: solve? ( -- f )
+: solve? ( n -- f )
    recursive
-   find-unassigned-location dup -1 = if exit then   \ success!
+   dup cell-count = if drop -1 exit then            \ success!
+   dup grid@ if 1+ solve? exit then                 \ if it's already assigned, skip
    10 1 ?do                                         \ consider digits 1 to 9
      i over available? if                           \ if looks promising
        i over grid!                                 \ make tentative assignment
-       solve? if
+       dup 1+ solve? if
          unloop drop -1 exit                        \ recur, if success, yay!
        then
-       unassigned over grid!                        \ failure, unmake & try again
-     then
+     then 
    loop
+   unassigned over grid!                            \ failure, unmake & try again
    drop 0 ;                                         \ this triggers backtracking
 
 
@@ -218,7 +198,7 @@ board-size dup * constant cell-count
 
 : game ( -- )
   utime
-  solve? if
+  0 solve? if
     utime 2swap d-
     .board
     cr cr ." Time taken " d. ." microseconds" cr cr
