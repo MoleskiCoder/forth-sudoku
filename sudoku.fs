@@ -132,10 +132,9 @@ board-size dup * constant cell-count
 \ if possible.
 
 : available? ( number n -- f )
-   2dup used-in-row? >r r@ if 2drop rdrop 0 exit then
-   2dup used-in-column? >r r@ if 2drop rdrop rdrop 0 exit then
-        used-in-box? 0=
-   r> 0= r> 0= and and ;
+   2dup used-in-row?    if 2drop 0 exit then
+   2dup used-in-column? if 2drop 0 exit then
+        used-in-box? 0= ;
 
 
 \ Function: find-unassigned-location
