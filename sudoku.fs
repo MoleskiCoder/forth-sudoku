@@ -85,8 +85,9 @@ board-size dup * constant cell-count
 : used-in-row? ( number n -- f )
    move>row-start puzzle +
    board-size 0 ?do
-     2dup i +
+     2dup
      c@ = if unloop 2drop -1 exit then
+     1+
    loop 2drop 0 ;
 
 
@@ -95,13 +96,14 @@ board-size dup * constant cell-count
 \ Returns a boolean which indicates whether any assigned entry
 \ in the specified column matches the given number.
 
-\ Very similar to used-in-row?, with the loop increment multiplied by board-size.
+\ Very similar to used-in-row?, with the offset incrementing by the board-size
 
 : used-in-column? ( number n -- f )
    move>column-start puzzle +
    board-size 0 ?do
-     2dup i xy>move
+     2dup
      c@ = if unloop 2drop -1 exit then
+     board-size +
    loop 2drop 0 ;
 
 
@@ -150,9 +152,11 @@ board-size dup * constant cell-count
 \ For performance reasons in Forth, I've inlined the puzzle + grid offset access.
 
 : find-unassigned-location ( -- n/-1 )
+   puzzle
    cell-count 0 ?do
-     i grid@ unassigned? if i unloop exit then
-   loop -1 ;
+     dup c@ unassigned? if drop i unloop exit then
+     1+
+   loop drop -1 ;
 
 
 \ Function: solve?
