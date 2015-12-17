@@ -86,7 +86,7 @@ board-size dup * constant cell-count
    move>row-start cells puzzle +
    board-size 0 ?do
      2dup
-     @ = if unloop 2drop -1 exit then
+     @ = if unloop drop exit then
      cell+
    loop 2drop 0 ;
 
@@ -102,7 +102,7 @@ board-size dup * constant cell-count
    move>column-start cells puzzle +
    board-size 0 ?do
      2dup
-     @ = if unloop 2drop -1 exit then
+     @ = if unloop drop exit then
      board-size cells +
    loop 2drop 0 ;
 
@@ -118,7 +118,7 @@ board-size dup * constant cell-count
    move>box-start cells puzzle +
    board-size 0 ?do
      2dup i box-size /mod xy>move cells +
-     @ = if unloop 2drop -1 exit then
+     @ = if unloop drop exit then
    loop 2drop 0 ;
 
 
