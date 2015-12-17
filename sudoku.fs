@@ -7,15 +7,15 @@
 \ http://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html
 
 create puzzle
-8 c, 0 c, 0 c, 0 c, 0 c, 0 c, 0 c, 0 c, 0 c,
-0 c, 0 c, 3 c, 6 c, 0 c, 0 c, 0 c, 0 c, 0 c,
-0 c, 7 c, 0 c, 0 c, 9 c, 0 c, 2 c, 0 c, 0 c,
-0 c, 5 c, 0 c, 0 c, 0 c, 7 c, 0 c, 0 c, 0 c,
-0 c, 0 c, 0 c, 0 c, 4 c, 5 c, 7 c, 0 c, 0 c,
-0 c, 0 c, 0 c, 1 c, 0 c, 0 c, 0 c, 3 c, 0 c,
-0 c, 0 c, 1 c, 0 c, 0 c, 0 c, 0 c, 6 c, 8 c,
-0 c, 0 c, 8 c, 5 c, 0 c, 0 c, 0 c, 1 c, 0 c,
-0 c, 9 c, 0 c, 0 c, 0 c, 0 c, 4 c, 0 c, 0 c,
+8 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ,
+0 , 0 , 3 , 6 , 0 , 0 , 0 , 0 , 0 ,
+0 , 7 , 0 , 0 , 9 , 0 , 2 , 0 , 0 ,
+0 , 5 , 0 , 0 , 0 , 7 , 0 , 0 , 0 ,
+0 , 0 , 0 , 0 , 4 , 5 , 7 , 0 , 0 ,
+0 , 0 , 0 , 1 , 0 , 0 , 0 , 3 , 0 ,
+0 , 0 , 1 , 0 , 0 , 0 , 0 , 6 , 8 ,
+0 , 0 , 8 , 5 , 0 , 0 , 0 , 1 , 0 ,
+0 , 9 , 0 , 0 , 0 , 0 , 4 , 0 , 0 ,
 
 
 \ Some useful constants
@@ -36,10 +36,10 @@ board-size dup * constant cell-count
 \ Puzzle access methods
 
 : grid@ ( n -- number )
-   ]] puzzle + c@ [[ ; immediate
+   ]] cells puzzle + @ [[ ; immediate
 
 : grid! ( number n -- )
-   ]] puzzle + c! [[ ; immediate
+   ]] cells puzzle + ! [[ ; immediate
 
 
 \ Move and grid position translation methods
@@ -83,11 +83,11 @@ board-size dup * constant cell-count
 \ simplified in Forth by row cells being contiguious in the grid.
 
 : used-in-row? ( number n -- f )
-   move>row-start puzzle +
+   move>row-start cells puzzle +
    board-size 0 ?do
      2dup
-     c@ = if unloop 2drop -1 exit then
-     1+
+     @ = if unloop 2drop -1 exit then
+     cell+
    loop 2drop 0 ;
 
 
@@ -99,11 +99,11 @@ board-size dup * constant cell-count
 \ Very similar to used-in-row?, with the offset incrementing by the board-size
 
 : used-in-column? ( number n -- f )
-   move>column-start puzzle +
+   move>column-start cells puzzle +
    board-size 0 ?do
      2dup
-     c@ = if unloop 2drop -1 exit then
-     board-size +
+     @ = if unloop 2drop -1 exit then
+     board-size cells +
    loop 2drop 0 ;
 
 
@@ -115,10 +115,10 @@ board-size dup * constant cell-count
 \ Convert the loop into a box xy, then calculate an offset to obtain cell value.
 
 : used-in-box? ( number n - f )
-   move>box-start puzzle +
+   move>box-start cells puzzle +
    board-size 0 ?do
-     2dup i box-size /mod xy>move +
-     c@ = if unloop 2drop -1 exit then
+     2dup i box-size /mod xy>move cells +
+     @ = if unloop 2drop -1 exit then
    loop 2drop 0 ;
 
 
@@ -153,8 +153,8 @@ board-size dup * constant cell-count
 : find-unassigned-location ( -- n/-1 )
    puzzle
    cell-count 0 ?do
-     dup c@ unassigned? if drop i unloop exit then
-     1+
+     dup @ unassigned? if drop i unloop exit then
+     cell+
    loop drop -1 ;
 
 
