@@ -1,7 +1,21 @@
 \
 \ From: https://see.stanford.edu/materials/icspacs106b/H19-RecBacktrackExamples.pdf
 \
-\ A straightforward port from the original C to Forth
+\ A straightforward port from the original C++ to Forth
+
+\ Some useful constants
+
+0 constant unassigned
+3 constant box-size
+9 constant board-size
+board-size dup * constant cell-count
+board-size 1+ constant puzzle-base
+
+
+: puzzle-base!
+   puzzle-base base ! ;
+
+puzzle-base!
 
 
 \ http://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html
@@ -16,15 +30,6 @@ create puzzle
 0 , 0 , 1 , 0 , 0 , 0 , 0 , 6 , 8 ,
 0 , 0 , 8 , 5 , 0 , 0 , 0 , 1 , 0 ,
 0 , 9 , 0 , 0 , 0 , 0 , 4 , 0 , 0 ,
-
-
-\ Some useful constants
-
-0 constant unassigned
-
-3 constant box-size
-9 constant board-size
-board-size dup * constant cell-count
 
 
 \ Rather than compare against zero, make the code more meaningful to readers.
@@ -143,7 +148,7 @@ board-size dup * constant cell-count
 \ unassigned locations in such a way to meet the requirements for sudoku
 \ solution (non-duplication across rows, columns, and boxes). The function
 \ operates via recursive backtracking: it finds an unassigned location with
-\ the grid and then considers all digits from 1 to 9 in a loop. If a digit
+\ the grid and then considers all digits from 1 to "board-size" in a loop. If a digit
 \ is found that has no existing conflicts, tentatively assign it and recur
 \ to attempt to fill in rest of grid. If this was successful, the puzzle is
 \ solved. If not, unmake that decision and try again. If all digits have
@@ -154,7 +159,7 @@ board-size dup * constant cell-count
    recursive
    dup cell-count = if drop -1 exit then            \ success!
    dup grid@ if 1+ solve? exit then                 \ if it's already assigned, skip
-   10 1 ?do                                         \ consider digits 1 to 9
+   10 1 ?do                                         \ consider all digits
      i over available? if                           \ if looks promising
        i over grid!                                 \ make tentative assignment
        dup 1+ solve? if
