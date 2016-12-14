@@ -40,11 +40,14 @@ create puzzle
 
 \ Puzzle access methods
 
+: grid>addr ( n - addr )
+   ]] cells puzzle + [[ ; immediate
+
 : grid@ ( n -- number )
-   ]] cells puzzle + @ [[ ; immediate
+   ]] grid>addr @ [[ ; immediate
 
 : grid! ( number n -- )
-   ]] cells puzzle + ! [[ ; immediate
+   ]] grid>addr ! [[ ; immediate
 
 
 \ Move and grid position translation methods
@@ -88,7 +91,7 @@ create puzzle
 \ simplified in Forth by row cells being contiguious in the grid.
 
 : used-in-row? ( number n -- f )
-   move>row-start cells puzzle +
+   move>row-start grid>addr
    board-size 0 ?do
      2dup
      @ = if unloop drop exit then
@@ -104,7 +107,7 @@ create puzzle
 \ Very similar to used-in-row?, with the offset incrementing by the board-size
 
 : used-in-column? ( number n -- f )
-   move>column-start cells puzzle +
+   move>column-start grid>addr
    board-size 0 ?do
      2dup
      @ = if unloop drop exit then
@@ -120,7 +123,7 @@ create puzzle
 \ Convert the loop into a box xy, then calculate an offset to obtain cell value.
 
 : used-in-box? ( number n - f )
-   move>box-start cells puzzle +
+   move>box-start grid>addr
    board-size 0 ?do
      2dup i box-size /mod xy>move cells +
      @ = if unloop drop exit then
