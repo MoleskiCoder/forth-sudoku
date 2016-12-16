@@ -11,6 +11,9 @@
 board-size dup * constant cell-count
 board-size 1+ constant puzzle-base
 
+board-size cells constant column-jump
+board-size box-size - 1+ cells constant box-jump
+
 
 : puzzle-base!
    puzzle-base base ! ;
@@ -83,6 +86,12 @@ create puzzle
    xy>move [[ ; immediate
 
 
+\ Used macro helper
+
+: cell-check
+	]] 2dup @ = if drop exit then [[ ; immediate
+
+
 \ Function: used-in-row?
 \ ----------------------
 \ Returns a boolean which indicates whether any assigned entry
@@ -92,11 +101,16 @@ create puzzle
 
 : used-in-row? ( number n -- f )
    move>row-start grid>addr
-   board-size 0 ?do
-     2dup
-     @ = if unloop drop exit then
-     cell+
-   loop 2drop 0 ;
+         cell-check
+   cell+ cell-check
+   cell+ cell-check
+   cell+ cell-check
+   cell+ cell-check
+   cell+ cell-check
+   cell+ cell-check
+   cell+ cell-check
+   cell+ cell-check
+   2drop 0 ;
 
 
 \ Function: used-in-column?
@@ -108,11 +122,16 @@ create puzzle
 
 : used-in-column? ( number n -- f )
    move>column-start grid>addr
-   board-size 0 ?do
-     2dup
-     @ = if unloop drop exit then
-     board-size cells +
-   loop 2drop 0 ;
+                 cell-check
+   column-jump + cell-check
+   column-jump + cell-check
+   column-jump + cell-check
+   column-jump + cell-check
+   column-jump + cell-check
+   column-jump + cell-check
+   column-jump + cell-check
+   column-jump + cell-check
+   2drop 0 ;
 
 
 \ Function: used-in-box?
@@ -124,10 +143,16 @@ create puzzle
 
 : used-in-box? ( number n - f )
    move>box-start grid>addr
-   board-size 0 ?do
-     2dup i box-size /mod xy>move cells +
-     @ = if unloop drop exit then
-   loop 2drop 0 ;
+              cell-check
+        cell+ cell-check
+        cell+ cell-check
+   box-jump + cell-check
+        cell+ cell-check
+        cell+ cell-check
+   box-jump + cell-check
+        cell+ cell-check
+        cell+ cell-check
+   2drop 0 ;
 
 
 \ Function: available?
